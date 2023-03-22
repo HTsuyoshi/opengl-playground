@@ -1,5 +1,5 @@
 CC    = g++
-NAME  = ex_01
+NAME  = ex_03
 FLAGS = -g
 GLAD  = ../../lib/GLAD/src/glad.c
 
