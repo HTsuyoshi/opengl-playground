@@ -1,0 +1,2 @@
+CompileFlags:
+  Add: -I/home/feeva/repo/opengl-playground/learnopengl/04_textures/lib
