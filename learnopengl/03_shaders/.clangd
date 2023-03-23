@@ -1,2 +1,2 @@
 CompileFlags:
-  Add: -I/home/feeva/repo/opengl-playground/04_textures/lib
+  Add: -Ilib
