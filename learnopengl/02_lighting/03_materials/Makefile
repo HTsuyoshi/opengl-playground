@@ -1,5 +1,5 @@
 CC       = g++
-NAME     = camera
+NAME     = materials
 FLAGS    = -g
 INCLUDES = -I ./lib
 GLAD     = ../../lib/GLAD/src/glad.c
