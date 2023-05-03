@@ -1,7 +1,10 @@
 CC           := g++
-NAME         := lighting_maps
+NAME         := multiple_lights
 FLAGS        := -g
-INCLUDES     := -Ilib -I../../lib/imgui/include -I../../lib/own/include -I../../lib/GLAD/include
+INCLUDES     := -Ilib \
+			   -I../../lib/imgui/include \
+			   -I../../lib/own/include \
+			   -I../../lib/GLAD/include
 MYLIBS       := ../../lib/own/src/shapes.cpp
 GLAD         := ../../lib/GLAD/src/glad.c
 IMGUI_FOLDER := ../../lib/imgui/src

@@ -1,11 +1,14 @@
-CC           := g++
-NAME         := lighting_maps
-FLAGS        := -g
-INCLUDES     := -Ilib -I../../lib/imgui/include -I../../lib/own/include -I../../lib/GLAD/include
-MYLIBS       := ../../lib/own/src/shapes.cpp
-GLAD         := ../../lib/GLAD/src/glad.c
-IMGUI_FOLDER := ../../lib/imgui/src
-IMGUI        := $(IMGUI_FOLDER)/imgui.cpp \
+CC           ::= g++
+NAME         ::= $(shell pwd | cut -d '/' -f 9)
+FLAGS        ::= -g
+INCLUDES     ::= -I../lib \
+			   -I../../../lib/imgui/include \
+			   -I../../../lib/own/include \
+			   -I../../../lib/GLAD/include
+MYLIBS       ::= ../../../lib/own/src/shapes.cpp
+GLAD         ::= ../../../lib/GLAD/src/glad.c
+IMGUI_FOLDER ::= ../../../lib/imgui/src
+IMGUI        ::= $(IMGUI_FOLDER)/imgui.cpp \
 			   $(IMGUI_FOLDER)/imgui_impl_glfw.cpp \
 			   $(IMGUI_FOLDER)/imgui_impl_opengl3.cpp \
 			   $(IMGUI_FOLDER)/imgui_tables.cpp \
@@ -20,6 +23,7 @@ build: $(NAME).cpp
 
 .PHONY: 'start'
 start: build
+	echo $(NAME)
 	@echo 'Executing...'
 	./$(NAME)
 

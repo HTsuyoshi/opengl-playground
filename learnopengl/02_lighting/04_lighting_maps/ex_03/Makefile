@@ -1,8 +1,8 @@
-CC       = g++
-NAME     = ex_03
-FLAGS    = -g
-INCLUDES = -I ../lib
-GLAD     = ../../../lib/GLAD/src/glad.c
+CC       := g++
+NAME     := ex_03
+FLAGS    := -g
+INCLUDES := -I ../lib
+GLAD     := ../../../lib/GLAD/src/glad.c
 
 .PHONY: 'build'
 build: $(NAME).cpp

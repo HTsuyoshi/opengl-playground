@@ -20,6 +20,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
+
 unsigned int loadTexture(char const * path);
 void setup_shape(std::vector<float> shape, unsigned int* VAO, unsigned int* VBO);
 
@@ -64,6 +65,7 @@ int main()
 	}
 
 	Shader lightingShader("shaders/color.vs", "shaders/color.fs");
+	Shader lightShader("shaders/shader.vs", "shaders/shader.fs");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -75,23 +77,54 @@ int main()
 	unsigned int planeVAO;
 	setup_shape(plane, &VBO, &planeVAO);
 
-	unsigned int texture1 = loadTexture("textures/container2.png");
-	unsigned int texture2 = loadTexture("textures/container2_specular.png");
+	unsigned int texture1 = loadTexture("../textures/container2.png");
+	unsigned int texture2 = loadTexture("../textures/container2_specular.png");
 
 	lightingShader.use();
+	lightingShader.setVec3("viewPos", camera.Position);
 	lightingShader.setInt("material.diffuse", 0);
 	lightingShader.setInt("material.specular", 1);
 	lightingShader.setFloat("material.shininess", 64.0f);
-	lightingShader.setVec3("light.ambient", glm::vec3(0.1f));
-	lightingShader.setVec3("light.diffuse", glm::vec3(0.8f));
-	lightingShader.setVec3("light.specular", glm::vec3(1.0f));
-	lightingShader.setFloat("light.constant", 1.0f);
-	lightingShader.setFloat("light.linear", 0.09f);
-	lightingShader.setFloat("light.quadratic", 0.032f);
-	lightingShader.setVec3("light.direction", camera.CameraDirection());
-	lightingShader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f)));
-	lightingShader.setFloat("light.outerCutoff", glm::cos(glm::radians(17.5f)));
-	lightingShader.setVec3("lightPos", camera.Position);
+
+	glm::vec3 ambientColor(0.2, 0.2 ,0.6);
+
+	lightingShader.setVec3("dirLight.ambient", ambientColor * 0.1f);
+	lightingShader.setVec3("dirLight.diffuse", ambientColor * 0.8f);
+	lightingShader.setVec3("dirLight.specular", ambientColor * 1.0f);
+	lightingShader.setVec3("dirLight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
+
+	glm::vec3 positions[] = {
+		glm::vec3(2.0f, 0.0f, 2.0f),
+		glm::vec3(-2.0f, 0.0f, -2.0f),
+	};
+
+	lightingShader.setVec3("pointLight[0].position", positions[0]);
+	lightingShader.setVec3("pointLight[0].ambient", ambientColor * 0.1f);
+	lightingShader.setVec3("pointLight[0].diffuse", ambientColor * 0.8f);
+	lightingShader.setVec3("pointLight[0].specular", ambientColor * 1.0f);
+	lightingShader.setFloat("pointLight[0].constant", 1.0f);
+	lightingShader.setFloat("pointLight[0].linear", 0.09f);
+	lightingShader.setFloat("pointLight[0].quadratic", 0.032f);
+
+	lightingShader.setVec3("pointLight[1].position", positions[1]);
+	lightingShader.setVec3("pointLight[1].ambient", ambientColor * 0.1f);
+	lightingShader.setVec3("pointLight[1].diffuse", ambientColor * 0.8f);
+	lightingShader.setVec3("pointLight[1].specular", ambientColor * 1.0f);
+	lightingShader.setFloat("pointLight[1].constant", 1.0f);
+	lightingShader.setFloat("pointLight[1].linear", 0.09f);
+	lightingShader.setFloat("pointLight[1].quadratic", 0.032f);
+
+	lightingShader.setVec3("spotLight.ambient", glm::vec3(0.1f));
+	lightingShader.setVec3("spotLight.diffuse", glm::vec3(0.8f));
+	lightingShader.setVec3("spotLight.specular", glm::vec3(1.0f));
+	lightingShader.setFloat("spotLight.constant", 1.0f);
+	lightingShader.setFloat("spotLight.linear", 0.09f);
+	lightingShader.setFloat("spotLight.quadratic", 0.032f);
+	lightingShader.setVec3("spotLight.position", camera.Position);
+	lightingShader.setVec3("spotLight.direction", camera.CameraDirection());
+	lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+	lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
+
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -108,7 +141,7 @@ int main()
 
 		processInput(window);
 
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SRC_WIDTH / (float)SRC_HEIGHT, 0.1f, 100.0f);
@@ -122,11 +155,11 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		lightingShader.use();
-		lightingShader.setVec3("lightPos", camera.Position);
+		lightingShader.setVec3("spotLight.position", camera.Position);
+		lightingShader.setVec3("spotLight.direction", camera.CameraDirection());
 		lightingShader.setMat4("projection", projection);
 		lightingShader.setMat4("view", view);
 		lightingShader.setMat4("model", model);
-
 		glBindVertexArray(pyramidVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 18);
 
@@ -134,14 +167,31 @@ int main()
 		lightingShader.setMat4("model", model);
 
 		glBindVertexArray(planeVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
 		lightingShader.setMat4("model", model);
 
-		glBindVertexArray(planeVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		lightingShader.setMat4("model", model);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		lightShader.use();
+		lightShader.setMat4("projection", projection);
+		lightShader.setMat4("view", view);
+		for (int i=0; i<2; ++i)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, positions[i]);
+			model = glm::scale(model, glm::vec3(0.2f));
+			lightShader.setMat4("model", model);
+			glBindVertexArray(pyramidVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 18);
+		}
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -201,6 +251,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(yoffset);
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
 void setup_shape(std::vector<float> shape, unsigned int* VAO, unsigned int* VBO)
 {
 	glGenVertexArrays(1, &*VAO);
@@ -218,11 +273,6 @@ void setup_shape(std::vector<float> shape, unsigned int* VAO, unsigned int* VBO)
 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
 }
 
 unsigned int loadTexture(char const * path)

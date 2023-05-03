@@ -1,10 +1,13 @@
 CC           := g++
-NAME         := lighting_maps
+NAME         := ex_02
 FLAGS        := -g
-INCLUDES     := -Ilib -I../../lib/imgui/include -I../../lib/own/include -I../../lib/GLAD/include
-MYLIBS       := ../../lib/own/src/shapes.cpp
-GLAD         := ../../lib/GLAD/src/glad.c
-IMGUI_FOLDER := ../../lib/imgui/src
+INCLUDES     := -I../lib \
+			   -I../../../lib/imgui/include \
+			   -I../../../lib/own/include \
+			   -I../../../lib/GLAD/include
+MYLIBS       := ../../../lib/own/src/shapes.cpp
+GLAD         := ../../../lib/GLAD/src/glad.c
+IMGUI_FOLDER := ../../../lib/imgui/src
 IMGUI        := $(IMGUI_FOLDER)/imgui.cpp \
 			   $(IMGUI_FOLDER)/imgui_impl_glfw.cpp \
 			   $(IMGUI_FOLDER)/imgui_impl_opengl3.cpp \
