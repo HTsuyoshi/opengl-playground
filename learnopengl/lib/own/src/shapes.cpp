@@ -144,6 +144,16 @@ namespace Shape
 			size_x_neg, size_y_neg, size_z_pos,  0.0f, 1.0f,   0.0f, 1.0f, 0.0f,
 			size_x_neg, size_y_neg, size_z_neg,  0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
 		};
+		//float plane[] =
+		//{
+		//	// Vertex                      Texture       Normal
+		//	size_x_neg, size_y_neg, size_z_neg,  0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+		//	size_x_pos, size_y_neg, size_z_neg,  10.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+		//	size_x_pos, size_y_neg, size_z_pos,  10.0f, 10.0f,   0.0f, 1.0f, 0.0f,
+		//	size_x_pos, size_y_neg, size_z_pos,  10.0f, 10.0f,   0.0f, 1.0f, 0.0f,
+		//	size_x_neg, size_y_neg, size_z_pos,  0.0f,  10.0f,   0.0f, 1.0f, 0.0f,
+		//	size_x_neg, size_y_neg, size_z_neg,  0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+		//};
 		return *new std::vector<float>(plane, plane + sizeof(plane)/sizeof(plane[0]));
 	}
 
